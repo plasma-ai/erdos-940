@@ -1,0 +1,6 @@
+{
+  "challenge_module": "Challenge",
+  "solution_module": "Solution",
+  "theorem_names": ["Erdos940.cubic_complement_density", "Erdos940.quartic_complement_density", "Erdos940.cubic_large_integers", "Erdos940.quartic_large_integers"],
+  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"]
+}

@@ -1,0 +1,154 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: "v0.4"
+
+project:
+  name: "Erdős Problem 940: sums of r-powerful numbers"
+  description: >-
+    A Lean proof that for r = 3 and r = 4 the integers that are not a sum of
+    at most r r-powerful numbers have positive lower density, and hence are
+    infinite. This answers the infinitude question of Erdős Problem 940 for
+    these two exponents. The r = 4 case is new to our knowledge; the r = 3
+    case formalizes Beyer de Ryke. The density-zero question remains open for
+    every r ≥ 3, and the infinitude question for every r ≥ 5.
+  authors:
+    - "Jacob Parish"
+  license: "Apache-2.0"
+  responsible_maintainers:
+    - "Jacob Parish"
+
+classification:
+  arxiv: ["math.NT"]
+  msc2020: ["11P05", "11N36"]
+
+sources:
+  - title: "Problems and results on number theoretic properties of consecutive integers and related questions"
+    authors: ["P. Erdős"]
+    id: "Proceedings of the Fifth Manitoba Conference on Numerical Mathematics (1975), Congressus Numerantium XVI (1976), 25–44"
+    type: "paper"
+    relationship: "formalizes"
+    note: >-
+      Source of the question, on p. 33. To our knowledge, the r = 4 case
+      proved here is new.
+  - title: "A density deficit for sums of three cube-full numbers"
+    authors: ["Basile Beyer de Ryke"]
+    id: "arXiv:2609.35772"
+    type: "paper"
+    relationship: "formalizes"
+    note: >-
+      Proves positive lower density of the complement for r = 3, formalized
+      in Erdos940/Cubic. The quartic case follows the same plan with
+      different local and analytic inputs.
+  - title: "Erdős Problem #940"
+    authors: ["Thomas F. Bloom"]
+    id: "https://www.erdosproblems.com/940"
+    relationship: "background"
+    note: >-
+      Accessed 2026-10-12. Bloom's catalog entry supplies the problem number
+      and statement.
+  - title: "Formal Conjectures: ErdosProblems/940.lean"
+    authors: ["The Formal Conjectures Authors"]
+    id: "https://github.com/google-deepmind/formal-conjectures/blob/1a339399f9d49d5f086e78851a372d38ded8c427/FormalConjectures/ErdosProblems/940.lean"
+    relationship: "background"
+    note: >-
+      The definition of Nat.Full in Challenge.lean is copied verbatim from
+      FormalConjecturesForMathlib/Data/Nat/Full.lean at the same commit, and
+      the infinitude statements instantiate erdos_940.variants.large_integers
+      at r = 3 and r = 4.
+  - title: "ClassFieldTheory"
+    authors: ["Naganori Yamaguchi"]
+    id: "https://github.com/n-yamaguchi-0729/ClassFieldTheory"
+    relationship: "adapts"
+    note: >-
+      Local and global class field theory used by the quartic case. The import
+      closure of the modules it uses is vendored under vendor/ClassFieldTheory
+      from commit 7713795234690681b4406ae198b07aa95e82716a and ported to this
+      toolchain.
+  - title: "AINTLIB: Chebotarev density theorem"
+    authors: ["Chris Birkbeck"]
+    id: "https://github.com/CBirkbeck/AINTLIB"
+    relationship: "adapts"
+    note: >-
+      The Chebotarev density theorem, vendored unchanged under vendor/AINTLIB
+      from commit f8fd7bf3f0194ae5cf015f8095a7e120ba8344d6.
+
+status:
+  scope: >-
+    Comparator checks four theorems: for r = 3 and r = 4, positive lower
+    density of the integers that are not a sum of at most r r-powerful
+    numbers, and the formal-conjectures infinitude statement. Neither the
+    density-zero question for any r ≥ 3 nor the infinitude question for
+    r ≥ 5 is addressed.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: ["propext", "Quot.sound", "Classical.choice"]
+
+automation:
+  methods:
+    - method: "agent"
+      models: ["gpt-6-sol"]
+      framework: "Codex"
+      tool_setup: "Lean 4.34.0, Mathlib, and Lake."
+      prompting_notes: >-
+        Interactive human direction covered the target statements and the
+        proof strategy for both cases.
+    - method: "agent"
+      models: ["claude-opus-5-5"]
+      framework: "Claude Code"
+      tool_setup: "Lean 4.35.0-rc4, Mathlib, and Lake."
+      prompting_notes: >-
+        Ported the development and the vendored libraries to this toolchain
+        and assembled the publication layout.
+  notes: >-
+    GPT-6 Sol produced the Lean proofs of both cases under iterative human
+    direction, and Claude Code ported them to Lean 4.35.0-rc4. The vendored
+    class field theory library is described upstream as written with OpenAI
+    Codex.
+
+fidelity:
+  divergences: >-
+    No known divergence from the formal-conjectures statement for r = 3 and
+    r = 4. As there, the numbers 0 and 1 count as r-powerful, so a
+    representation may use fewer than r positive summands; the statements
+    proved here are therefore at least as strong as the versions that use
+    only positive summands.
+
+review:
+  status: "self-assessed"
+  reviewers: []
+  notes: >-
+    The full development builds on Lean v4.35.0-rc4, and all four compared
+    theorems depend only on propext, Classical.choice, and Quot.sound.
+    Comparator has not yet been run. No independent mathematical review of
+    the quartic argument has been recorded.
+
+alignment:
+  namespace: "Erdos940"
+  statements:
+    - source: "Beyer de Ryke, Corollary 1.2 (r = 3)"
+      lean: "Erdos940.cubic_complement_density"
+      module: "Solution"
+      status: "proved"
+      note: >-
+        The integers that are not a sum of at most three cube-full numbers
+        have positive lower density.
+    - source: "Erdős Problem 940, positive lower density for r = 4"
+      lean: "Erdos940.quartic_complement_density"
+      module: "Solution"
+      status: "proved"
+      note: >-
+        The integers that are not a sum of at most four 4-full numbers have
+        positive lower density.
+    - source: "Erdős Problem 940, infinitude question for r = 3"
+      lean: "Erdos940.cubic_large_integers"
+      module: "Solution"
+      status: "proved"
+      note: >-
+        formal-conjectures' erdos_940.variants.large_integers at r = 3.
+    - source: "Erdős Problem 940, infinitude question for r = 4"
+      lean: "Erdos940.quartic_large_integers"
+      module: "Solution"
+      status: "proved"
+      note: >-
+        formal-conjectures' erdos_940.variants.large_integers at r = 4.
+
+acknowledgements: "Mathlib, formal-conjectures, Naganori Yamaguchi's ClassFieldTheory, Chris Birkbeck's AINTLIB, and the authors of the cited mathematical sources."
